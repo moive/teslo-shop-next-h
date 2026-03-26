@@ -100,4 +100,7 @@ body {
   .btn-secondary:hover {
     @apply bg-gray-300;
   }
+  .form-control {
+    @apply p-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/25;
+  }
 }

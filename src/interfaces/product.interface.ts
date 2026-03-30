@@ -1,5 +1,5 @@
 export interface IProduct {
-  // todo: id: string;
+  id: string;
   description: string;
   images: string[];
   inStock: number;
@@ -8,7 +8,7 @@ export interface IProduct {
   slug: string;
   tags: string[];
   title: string;
-  type: ValidTypes;
+  // type: ValidTypes;
   gender: "men" | "women" | "kid" | "unisex";
 }
 

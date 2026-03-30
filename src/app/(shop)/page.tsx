@@ -1,9 +1,9 @@
+import { getPaginatedProductsWithPagination } from "@/actions";
 import { ProductGrid, Title } from "@/components";
-import { initialData } from "@/seed/seed";
 
-const products = initialData.products;
+export default async function Home() {
+  const { products } = await getPaginatedProductsWithPagination();
 
-export default function Home() {
   return (
     <>
       <Title title="Store" subtitle="All products" className="mb-2" />

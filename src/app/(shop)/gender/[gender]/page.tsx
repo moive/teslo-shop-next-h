@@ -12,6 +12,11 @@ interface Props {
   };
 }
 
+export const metadata = {
+  title: "Gender",
+  description: "Gender",
+};
+
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { gender } = await params;
   const search = await searchParams;

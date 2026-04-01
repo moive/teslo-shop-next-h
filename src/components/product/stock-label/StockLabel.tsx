@@ -1,5 +1,6 @@
 "use client";
 import { titleFont } from "@/config/fonts";
+import { sleep } from "@/utils";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -8,26 +9,37 @@ interface Props {
 
 export const StockLabel = ({ slug }: Props) => {
   const [stock, setStock] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getStock = async () => {
       try {
+        await sleep(3);
         const response = await fetch(`/api/stock/${slug}`);
         const { stock } = await response.json();
         setStock(stock);
       } catch (error) {
         console.error("Error fetching stock:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     getStock();
   }, [slug]);
 
   return (
-    <h2 className={`${titleFont.className} antialiased font-bold text-lg`}>
-      Stock: {loading ? "Loading..." : stock}
-    </h2>
+    <>
+      {isLoading ? (
+        <h2
+          className={`${titleFont.className} antialiased font-bold text-lg animae-pulse bg-gray-200`}
+        >
+          &nbsp;
+        </h2>
+      ) : (
+        <h2 className={`${titleFont.className} antialiased font-bold text-lg`}>
+          Stock: {isLoading ? "Loading..." : stock}
+        </h2>
+      )}
+    </>
   );
 };

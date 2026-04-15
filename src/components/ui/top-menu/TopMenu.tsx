@@ -8,15 +8,12 @@ import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
 const TopMenu = () => {
   const openMenu = useUiStore((state) => state.openSideMenu);
   const totalItemsInCart = useCartStore((state) => state.getTotalItems());
-  const hydrate = useCartStore((state) => state.hydrate);
 
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
-
-  if (!hydrate) return null;
 
   return (
     <nav className="flex px-5 justify-between items-center w-full">

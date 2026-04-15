@@ -4,19 +4,17 @@ import { persist } from "zustand/middleware";
 
 interface State {
   cart: CartProduct[];
-  hydrate: boolean;
   getTotalItems: () => number;
 
   addProductToCart: (product: CartProduct) => void;
-  setHydrate: () => void;
+  updateProductQuantity: (product: CartProduct, quantity: number) => void;
+  removeProduct: (product: CartProduct) => void;
 }
 
 export const useCartStore = create<State>()(
   persist(
     (set, get) => ({
       cart: [],
-      hydrate: false,
-      setHydrate: () => set({ hydrate: true }),
       getTotalItems: () => {
         const { cart } = get();
         return cart.reduce((total, product) => total + product.quantity, 0);
@@ -42,12 +40,29 @@ export const useCartStore = create<State>()(
 
         set({ cart: udpatedCartProducts });
       },
+      updateProductQuantity: (product, quantity) => {
+        const { cart } = get();
+
+        const udpatedCartProducts = cart.map((item) => {
+          if (item.id === product.id && item.size === product.size) {
+            return { ...item, quantity };
+          }
+          return item;
+        });
+
+        set({ cart: udpatedCartProducts });
+      },
+      removeProduct: (product: CartProduct) => {
+        const { cart } = get();
+        const udpatedCartProducts = cart.filter(
+          (item) => item.id !== product.id || item.size !== product.size,
+        );
+
+        set({ cart: udpatedCartProducts });
+      },
     }),
     {
       name: "shopping-cart",
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrate();
-      },
     },
   ),
 );

@@ -10,8 +10,6 @@ import { IoInformationOutline } from "react-icons/io5";
 export const LoginForm = () => {
   const [state, dispatch] = useActionState(authenticate, undefined);
 
-  console.log(state);
-
   return (
     <form action={dispatch} className="flex flex-col">
       <label htmlFor="email">Email</label>
@@ -55,7 +53,6 @@ export const LoginForm = () => {
 
 function LoginButton() {
   const { pending } = useFormStatus();
-  console.log({ pending });
   return (
     <button
       type="submit"

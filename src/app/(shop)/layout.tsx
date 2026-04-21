@@ -1,7 +1,16 @@
+import { auth } from "@/auth.config";
 import { Footer, Sidebar } from "@/components";
 import TopMenu from "@/components/ui/top-menu/TopMenu";
+import { redirect } from "next/navigation";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+  console.log({ session });
+  if (!session?.user) redirect("/auth/login");
   return (
     <main className="min-h-screen">
       <TopMenu />

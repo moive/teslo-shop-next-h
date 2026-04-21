@@ -9,6 +9,12 @@ export const authConfig: NextAuthConfig = {
     signIn: "/auth/login",
     newUser: "/auth/new-account",
   },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      console.log(auth);
+      return true;
+    },
+  },
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -40,4 +46,4 @@ export const authConfig: NextAuthConfig = {
   ],
 };
 
-export const { signIn, signOut, auth: middleware } = NextAuth(authConfig);
+export const { signIn, signOut, auth } = NextAuth(authConfig);

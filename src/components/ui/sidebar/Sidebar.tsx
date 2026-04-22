@@ -12,6 +12,7 @@ import {
   IoTicketOutline,
 } from "react-icons/io5";
 import clsx from "clsx";
+import { logout } from "@/actions/auth/logout";
 
 export const Sidebar = () => {
   const isSideMenuOpen = useUiStore((state) => state.isSidebarMenuOpen);
@@ -70,6 +71,10 @@ export const Sidebar = () => {
         </Link>
         <Link
           href="/"
+          onClick={() => {
+            logout();
+            closeMenu();
+          }}
           className="flex items-center p-2 my-2 hover:bg-gray-100 rounded transition-all"
         >
           <IoLogOutOutline size={30} />

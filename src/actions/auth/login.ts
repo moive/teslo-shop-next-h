@@ -8,17 +8,17 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn("credentials", Object.fromEntries(formData));
-    console.log(1);
-  } catch (error) {
-    console.log(2);
-    if (isRedirectError(error)) throw error;
-    console.log(error);
-    return "CredentialsSignin";
-    if ((error as Error).message.includes("CredentialsSignin")) {
-      return "CredentialsSignin";
-    }
+    await signIn("credentials", {
+      ...Object.fromEntries(formData),
+      redirect: false,
+    });
 
-    throw error;
+    return "Success";
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+
+    if ((error as any).type === "CredentialsSignin") return "CredentialsSignin";
+    console.log(error);
+    return "UnKnownError";
   }
 }

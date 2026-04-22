@@ -14,6 +14,14 @@ export const authConfig: NextAuthConfig = {
       console.log(auth);
       return true;
     },
+    jwt({ token, user }) {
+      if (user) token.data = user;
+      return token;
+    },
+    session({ session, token, user }) {
+      if (token) session.user = token.data as any;
+      return session;
+    },
   },
   providers: [
     Credentials({
@@ -39,7 +47,6 @@ export const authConfig: NextAuthConfig = {
 
         // return user
         const { password: _, ...rest } = user;
-        console.log(rest);
         return rest;
       },
     }),

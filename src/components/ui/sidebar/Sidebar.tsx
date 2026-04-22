@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useUiStore } from "@/store";
 import {
   IoCloseOutline,
@@ -17,6 +18,10 @@ import { logout } from "@/actions/auth/logout";
 export const Sidebar = () => {
   const isSideMenuOpen = useUiStore((state) => state.isSidebarMenuOpen);
   const closeMenu = useUiStore((state) => state.closeSideMenu);
+
+  const { data: session } = useSession();
+  console.log({ session });
+
   return (
     <div>
       {isSideMenuOpen && (

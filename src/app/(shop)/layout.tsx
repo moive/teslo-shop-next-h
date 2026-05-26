@@ -9,7 +9,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/auth/login");
+  // if (!session?.user) redirect("/auth/login");
   return (
     <main className="min-h-screen">
       <TopMenu />

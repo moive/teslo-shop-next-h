@@ -4,6 +4,8 @@ import bcryptjs from "bcryptjs";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./lib/prisma";
 
+const authenticatedRoutes = ["/checkout/address"];
+
 export const authConfig: NextAuthConfig = {
   pages: {
     signIn: "/auth/login",
@@ -12,6 +14,12 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       console.log(auth);
+      const isLoggedIn = !!auth?.user;
+      const isOnProtectedRoute = authenticatedRoutes.includes(nextUrl.pathname);
+      if (isOnProtectedRoute) {
+        if (isLoggedIn) return true;
+        return false;
+      }
       return true;
     },
     jwt({ token, user }) {

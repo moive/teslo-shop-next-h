@@ -6,6 +6,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 
 import { registerUser } from "@/actions/auth/register";
+import { login } from "@/actions/auth/login";
+import { useRouter } from "next/navigation";
 
 type FormInputs = {
   name: string;
@@ -14,6 +16,8 @@ type FormInputs = {
 };
 
 export const RegisterForm = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -33,7 +37,9 @@ export const RegisterForm = () => {
       return;
     }
     console.log({ resp });
+    await login(email.toLowerCase(), password);
     reset();
+    router.replace("/");
   };
 
   return (

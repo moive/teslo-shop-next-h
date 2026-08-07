@@ -75,3 +75,8 @@ model User {
   role          Role      @default(user)
   imagen        String?
 }
+
+model Country {
+  id   String @id
+  name String
+}

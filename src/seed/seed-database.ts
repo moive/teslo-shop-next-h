@@ -1,9 +1,11 @@
 import "dotenv/config";
 import { prisma } from "../../src/lib/prisma";
 import { initialData } from "./seed";
+import { countries } from "./seed-countries";
 
 async function main() {
   await Promise.all([
+    prisma.country.deleteMany(),
     prisma.user.deleteMany(),
     prisma.productImage.deleteMany(),
     prisma.product.deleteMany(),
@@ -13,6 +15,8 @@ async function main() {
   const { categories, products, users } = initialData;
 
   await prisma.user.createMany({ data: users });
+
+  await prisma.country.createMany({ data: countries });
 
   // Categories
   // {

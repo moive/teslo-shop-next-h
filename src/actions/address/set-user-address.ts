@@ -36,6 +36,7 @@ const createOrUpdateUserAddress = async (address: Address, userId: string) => {
       countryId: address.country,
       firstName: address.firstName,
       lastName: address.lastName,
+      city: address.city,
       phone: address.phone,
       postalCode: address.postalCode,
     };

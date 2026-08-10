@@ -2,13 +2,13 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
 import type { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
-import { deleteUserAddress } from "@/actions/address/delete-user-address";
-import { setUserAddress } from "@/actions/address/set-user-address";
+import { deleteUserAddress, setUserAddress } from "@/actions";
 
 type FormInputs = {
   firstName: string;
@@ -40,6 +40,8 @@ export const AddressForm = ({ countries, userStoredAddress = null }: Props) => {
     },
   });
 
+  const router = useRouter();
+
   const { data: session } = useSession({ required: true });
 
   const setAddress = useAddressStore((state) => state.setAddress);
@@ -51,16 +53,18 @@ export const AddressForm = ({ countries, userStoredAddress = null }: Props) => {
     }
   }, [address]);
 
-  const onSubmit = (data: FormInputs) => {
+  const onSubmit = async (data: FormInputs) => {
     console.log({ data });
     setAddress(data);
     const { rememberAddress, ...restAddress } = data;
 
     if (rememberAddress) {
-      setUserAddress(restAddress, session!.user.id);
+      await setUserAddress(restAddress, session!.user.id);
     } else {
-      deleteUserAddress(session!.user.id);
+      await deleteUserAddress(session!.user.id);
     }
+
+    router.push("/checkout");
   };
 
   return (

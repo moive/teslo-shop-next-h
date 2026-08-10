@@ -1,18 +1,9 @@
+import type { Address } from "@/interfaces";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface State {
-  address: {
-    firstName: string;
-    lastName: string;
-    address: string;
-    address2?: string;
-    postalCode: string;
-    city: string;
-    country: string;
-    phone: string;
-    rememberAddress?: boolean;
-  };
+  address: Address;
   setAddress: (address: State["address"]) => void;
 }
 

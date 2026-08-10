@@ -6,3 +6,4 @@ export * from "./product/get-stock-by-slug";
 export * from "./product/product-pagination";
 export * from "./address/set-user-address";
 export * from "./address/delete-user-address";
+export * from "./address/get-user-address";

@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
-import type { Country } from "@/interfaces";
+import type { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
-import { deleteUserAddress, setUserAddress } from "@/actions";
+import { deleteUserAddress } from "@/actions/address/delete-user-address";
+import { setUserAddress } from "@/actions/address/set-user-address";
 
 type FormInputs = {
   firstName: string;
@@ -23,9 +24,10 @@ type FormInputs = {
 
 interface Props {
   countries: Country[];
+  userStoredAddress?: Partial<Address> | null;
 }
 
-export const AddressForm = ({ countries }: Props) => {
+export const AddressForm = ({ countries, userStoredAddress = null }: Props) => {
   const {
     handleSubmit,
     register,
@@ -33,7 +35,8 @@ export const AddressForm = ({ countries }: Props) => {
     reset,
   } = useForm<FormInputs>({
     defaultValues: {
-      // Todo: read from database
+      ...(userStoredAddress ?? {}),
+      rememberAddress: false,
     },
   });
 
@@ -56,8 +59,6 @@ export const AddressForm = ({ countries }: Props) => {
     if (rememberAddress) {
       setUserAddress(restAddress, session!.user.id);
     } else {
-      // Todo: Server Action to delete the address in the database
-      // Todo: Homework - Implement the delete address server action
       deleteUserAddress(session!.user.id);
     }
   };

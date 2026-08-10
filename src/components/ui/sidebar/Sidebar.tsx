@@ -13,7 +13,7 @@ import {
   IoTicketOutline,
 } from "react-icons/io5";
 import clsx from "clsx";
-import { logout } from "@/actions/auth/logout";
+import { logout } from "@/actions";
 
 export const Sidebar = () => {
   const isSideMenuOpen = useUiStore((state) => state.isSidebarMenuOpen);

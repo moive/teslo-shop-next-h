@@ -7,7 +7,7 @@ import clsx from "clsx";
 
 import type { Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
-import { setUserAddress } from "@/actions/address/set-user-address";
+import { deleteUserAddress, setUserAddress } from "@/actions";
 
 type FormInputs = {
   firstName: string;
@@ -58,6 +58,7 @@ export const AddressForm = ({ countries }: Props) => {
     } else {
       // Todo: Server Action to delete the address in the database
       // Todo: Homework - Implement the delete address server action
+      deleteUserAddress(session!.user.id);
     }
   };
 

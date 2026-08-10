@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 
 import { registerUser } from "@/actions/auth/register";
-import { login } from "@/actions/auth/login";
+import { login } from "@/actions";
 import { useRouter } from "next/navigation";
 
 type FormInputs = {

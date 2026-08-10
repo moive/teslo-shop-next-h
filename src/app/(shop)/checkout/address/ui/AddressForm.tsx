@@ -2,10 +2,12 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
 import type { Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
+import { setUserAddress } from "@/actions/address/set-user-address";
 
 type FormInputs = {
   firstName: string;
@@ -35,12 +37,12 @@ export const AddressForm = ({ countries }: Props) => {
     },
   });
 
+  const { data: session } = useSession({ required: true });
+
   const setAddress = useAddressStore((state) => state.setAddress);
   const address = useAddressStore((state) => state.address);
 
   useEffect(() => {
-    console.log(1234);
-    console.log({ address });
     if (address.firstName) {
       reset(address);
     }
@@ -49,6 +51,14 @@ export const AddressForm = ({ countries }: Props) => {
   const onSubmit = (data: FormInputs) => {
     console.log({ data });
     setAddress(data);
+    const { rememberAddress, ...restAddress } = data;
+
+    if (rememberAddress) {
+      setUserAddress(restAddress, session!.user.id);
+    } else {
+      // Todo: Server Action to delete the address in the database
+      // Todo: Homework - Implement the delete address server action
+    }
   };
 
   return (

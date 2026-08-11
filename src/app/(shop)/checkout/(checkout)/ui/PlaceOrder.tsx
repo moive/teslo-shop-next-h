@@ -62,7 +62,7 @@ export const PlaceOrder = () => {
       <div className="grid grid-cols-2">
         <span>No. Products</span>
         <span className="text-right">
-          {itemsInCart === 1 ? "1 item" : `{itemsInCart} items`}
+          {itemsInCart === 1 ? "1 item" : `${itemsInCart} items`}
         </span>
 
         <span>Sub-total</span>

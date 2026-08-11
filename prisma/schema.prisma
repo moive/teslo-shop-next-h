@@ -110,13 +110,13 @@ model UserAddress {
 
 // Order purchases
 model Order {
-  id          String    @id @default(uuid())
-  subTotal    Float
-  tax         Float
-  total       Float
-  itemInOrder Int
-  isPaid      Boolean
-  paidAt      DateTime?
+  id           String    @id @default(uuid())
+  subTotal     Float
+  tax          Float
+  total        Float
+  itemsInOrder Int
+  isPaid       Boolean   @default(false)
+  paidAt       DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

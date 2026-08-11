@@ -1,6 +1,8 @@
 "use server";
 
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth.config";
+
 import type { Address, Size } from "@/interfaces";
 
 interface ProductToOrder {
@@ -15,12 +17,24 @@ export const placeOrder = async (
 ) => {
   const session = await auth();
   const userId = session?.user.id;
-
+  // User session verification
   if (!userId)
     return {
       ok: false,
       message: "User not found in session",
     };
 
-  console.log({ productIds, address, userId });
+  // Get products information
+  const products = await prisma.product.findMany({
+    where: {
+      id: {
+        in: productIds.map((p) => p.productId),
+      },
+    },
+  });
+
+  // Calculate amounts
+
+  const itemsInOrder = productIds.reduce((count, p) => count + p.quantity, 0);
+  console.log({ itemsInOrder });
 };

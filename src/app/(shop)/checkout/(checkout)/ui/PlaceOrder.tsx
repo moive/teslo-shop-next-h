@@ -2,13 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
+import { useRouter } from "next/navigation";
+
 import { useAddressStore, useCartStore } from "@/store";
 import { currencyFormat, sleep } from "@/utils";
 import clsx from "clsx";
 import { placeOrder } from "@/actions";
 
 export const PlaceOrder = () => {
+  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const address = useAddressStore((state) => state.address);
@@ -18,6 +22,7 @@ export const PlaceOrder = () => {
   );
 
   const cart = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   useEffect(() => {
     setLoaded(true);
@@ -34,8 +39,17 @@ export const PlaceOrder = () => {
     }));
 
     const resp = await placeOrder(productsToOrder, address);
+    // console.log({ resp });
 
-    setIsPlacingOrder(false);
+    if (!resp.ok) {
+      setIsPlacingOrder(false);
+      setErrorMessage(resp.message);
+      return;
+    }
+
+    // Everything is ok
+    clearCart();
+    router.replace(`/orders/${resp.order?.id}`);
   };
 
   if (!loaded) return <p>Loading...</p>;
@@ -89,7 +103,7 @@ export const PlaceOrder = () => {
             </a>
           </span>
         </p>
-        {/* <p className="text-red-500 mb-2">Error or creation failed</p> */}
+        <p className="text-red-500 mb-2">{errorMessage}</p>
         <button
           // href="/orders/1234"
           onClick={onPlaceOrder}

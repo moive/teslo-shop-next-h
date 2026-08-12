@@ -60,52 +60,102 @@ export const placeOrder = async (
     },
   );
 
-  console.log({ subTotal, tax, total });
   // Create the database transaction
-  console.log({ address });
-  const prismaTx = await prisma.$transaction(async (tx) => {
-    // 1. Update product stock
-    // 2. Create order: header and details
-    const order = await tx.order.create({
-      data: {
-        userId,
-        itemsInOrder,
-        subTotal,
-        tax,
-        total,
-        orderItems: {
-          createMany: {
-            data: productIds.map((p) => ({
-              quantity: p.quantity,
-              size: p.size,
-              productId: p.productId,
-              price:
-                products.find((product) => product.id === p.productId)?.price ??
-                0,
-            })),
+  try {
+    const prismaTx = await prisma.$transaction(async (tx) => {
+      // 1. Update product stock
+      const updatedProductsPromises = products.map(async (product) => {
+        const productQuantity = productIds
+          .filter((p) => p.productId === product.id)
+          .reduce((acc, item) => item.quantity + acc, 0);
+
+        if (productQuantity === 0) {
+          throw new Error(`${product.id} not quantity defined - 500`);
+        }
+
+        return tx.product.update({
+          where: {
+            id: product.id,
+          },
+          data: {
+            // instock: product.inStock - productQuantity // no recommded
+            inStock: {
+              decrement: productQuantity,
+            },
+          },
+        });
+      });
+
+      const updatedProducts = await Promise.all(updatedProductsPromises);
+
+      // Verify values negative
+      // Fisrt way
+      // const hasNegativeStock = updatedProducts.some((product) => product.inStock < 0);
+      // if (hasNegativeStock) {
+      //   throw new Error("Stock is negative");
+      // }
+
+      // Second way
+      updatedProducts.forEach((product) => {
+        if (product.inStock < 0) {
+          throw new Error(`${product.title} there is no stock sufficient`);
+        }
+      });
+
+      // 2. Create order: header and details
+      const order = await tx.order.create({
+        data: {
+          userId,
+          itemsInOrder,
+          subTotal,
+          tax,
+          total,
+          orderItems: {
+            createMany: {
+              data: productIds.map((p) => ({
+                quantity: p.quantity,
+                size: p.size,
+                productId: p.productId,
+                price:
+                  products.find((product) => product.id === p.productId)
+                    ?.price ?? 0,
+              })),
+            },
           },
         },
-      },
-    });
-    // 3. Create order address
-    const orderAddress = await tx.orderAddress.create({
-      data: {
-        firstName: address.firstName,
-        lastName: address.lastName,
-        address: address.address,
-        address2: address.address2,
-        postalCode: address.postalCode,
-        city: address.city,
-        phone: address.phone,
-        countryId: address.country,
-        orderId: order.id,
-      },
+      });
+      // 3. Create order address
+      const orderAddress = await tx.orderAddress.create({
+        data: {
+          firstName: address.firstName,
+          lastName: address.lastName,
+          address: address.address,
+          address2: address.address2,
+          postalCode: address.postalCode,
+          city: address.city,
+          phone: address.phone,
+          countryId: address.country,
+          orderId: order.id,
+        },
+      });
+
+      return {
+        updatedProducts: updatedProducts,
+        order,
+        orderAddress,
+      };
     });
 
     return {
-      order,
-      updatedProducts: [],
-      orderAddress,
+      ok: true,
+      order: prismaTx.order,
+      prismaTx,
     };
-  });
+  } catch (error: any) {
+    console.log(error);
+    return {
+      ok: false,
+      message: error?.message,
+    };
+  }
 };

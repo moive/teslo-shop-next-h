@@ -15,3 +15,4 @@ export * from "./ui/top-menu/TopMenu";
 
 export * from "./providers/Providers";
 export * from "./paypal/PaypalButton";
+export * from "./orders/orderStatus";

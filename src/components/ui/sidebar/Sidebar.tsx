@@ -101,7 +101,8 @@ export const Sidebar = () => {
           <>
             <div className="w-full h-px bg-gray-200 my-10"></div>
             <Link
-              href="/"
+              href="/admin/products"
+              onClick={() => closeMenu()}
               className="flex items-center p-2 my-2 hover:bg-gray-100 rounded transition-all"
             >
               <IoShirtOutline size={30} />

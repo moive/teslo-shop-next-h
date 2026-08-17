@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { getPaginatedOrders } from "@/actions";
 import { Title } from "@/components";
 
-export default async function OrdersPage() {
+export default async function UsersPage() {
   const { ok, orders = [] } = await getPaginatedOrders();
   console.log({ orders });
   if (!ok) redirect("/auth/login");

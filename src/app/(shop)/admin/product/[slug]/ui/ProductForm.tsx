@@ -3,8 +3,14 @@
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
-import type { Category, IProduct as Product, ProductImage } from "@/interfaces";
+import type {
+  Category,
+  IProduct as Product,
+  ProductImage,
+  Size,
+} from "@/interfaces";
 import { GrClose } from "react-icons/gr";
+import clsx from "clsx";
 
 interface Props {
   product: Product & { productImage?: ProductImage[] };
@@ -30,6 +36,9 @@ export const ProductForm = ({ product, categories }: Props) => {
     handleSubmit,
     register,
     formState: { isValid },
+    getValues,
+    setValue,
+    watch,
   } = useForm<FormInputs>({
     defaultValues: {
       ...product,
@@ -37,6 +46,16 @@ export const ProductForm = ({ product, categories }: Props) => {
       sizes: product.sizes ?? [],
     },
   });
+
+  watch("sizes");
+
+  const onSizeChanged = (size: Size) => {
+    const sizes = new Set(getValues("sizes"));
+    sizes.has(size) ? sizes.delete(size) : sizes.add(size);
+    setValue("sizes", Array.from(sizes));
+
+    console.log(sizes);
+  };
 
   const onSubmit = async (data: FormInputs) => {
     console.log({ data });
@@ -135,7 +154,13 @@ export const ProductForm = ({ product, categories }: Props) => {
               // bg-blue-500 text-white <--- is selected
               <div
                 key={size}
-                className="flex  items-center justify-center w-10 h-10 mr-2 border border-gray-300 bg-white rounded-md cursor-pointer"
+                onClick={() => onSizeChanged(size)}
+                className={clsx(
+                  "p-2 border border-gray-300 shadow-sm w-14 rounded-md mr-2 mb-2 cursor-pointer transition-all text-center",
+                  {
+                    "bg-blue-500 text-white": getValues("sizes").includes(size),
+                  },
+                )}
               >
                 <span>{size}</span>
               </div>

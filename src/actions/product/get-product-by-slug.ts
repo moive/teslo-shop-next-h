@@ -6,9 +6,10 @@ export const getProductBySlug = async (slug: string) => {
   try {
     const product = await prisma.product.findFirst({
       include: {
-        productImages: {
+        productImage: {
           select: {
             url: true,
+            id: true,
           },
         },
       },
@@ -21,7 +22,7 @@ export const getProductBySlug = async (slug: string) => {
 
     return {
       ...product,
-      images: product.productImages.map((image) => image.url),
+      images: product.productImage.map((image) => image.url),
     };
   } catch (error) {
     console.error("Error fetching product by slug:", error);

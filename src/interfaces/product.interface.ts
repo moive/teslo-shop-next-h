@@ -8,6 +8,8 @@ export interface IProduct {
   slug: string;
   tags: string[];
   title: string;
+  categoryId?: string;
+  productImage?: ProductImage[];
   // type: Type;
   gender: Gender;
 }
@@ -20,6 +22,12 @@ export interface CartProduct {
   quantity: number;
   size: Size;
   image: string;
+}
+
+export interface ProductImage {
+  id?: number | string;
+  url: string;
+  productId?: string;
 }
 
 export type Gender = "men" | "women" | "kid" | "unisex";

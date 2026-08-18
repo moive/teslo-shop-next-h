@@ -1,10 +1,13 @@
 "use client";
 
-import type { Category, IProduct as Product } from "@/interfaces";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+
+import type { Category, IProduct as Product, ProductImage } from "@/interfaces";
+import { GrClose } from "react-icons/gr";
 
 interface Props {
-  product: Product;
+  product: Product & { productImage?: ProductImage[] };
   categories: Category[];
 }
 
@@ -147,6 +150,27 @@ export const ProductForm = ({ product, categories }: Props) => {
               className="form-control"
               accept="image/png, image/jpeg"
             />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {product.productImage?.map((image) => (
+              <div key={image.id} className="relative">
+                <Image
+                  src={`/products/${image.url}`}
+                  alt={product.title ?? ""}
+                  width={200}
+                  height={200}
+                  className="rounded shadow-md"
+                />
+                <button
+                  type="button"
+                  onClick={() => console.log(image.id, image.url)}
+                  className="btn-close absolute top-1 right-1"
+                >
+                  <GrClose />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>

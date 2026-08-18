@@ -51,9 +51,9 @@ model Product {
   tags        String[] @default([])
   gender      Gender
 
-  category      Category       @relation(fields: [categoryId], references: [id])
-  categoryId    String
-  productImages ProductImage[]
+  category     Category       @relation(fields: [categoryId], references: [id])
+  categoryId   String
+  productImage ProductImage[]
 
   orderItems OrderItem[]
 

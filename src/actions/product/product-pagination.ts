@@ -24,7 +24,7 @@ export const getPaginatedProductsWithPagination = async ({
       take,
       skip: (page - 1) * take,
       include: {
-        productImages: {
+        productImage: {
           take: 2,
           select: {
             url: true,
@@ -49,7 +49,7 @@ export const getPaginatedProductsWithPagination = async ({
       totalPages,
       products: products.map((product) => ({
         ...product,
-        images: product.productImages.map((image) => image.url),
+        images: product.productImage.map((image) => image.url),
       })),
     };
   } catch (error) {
